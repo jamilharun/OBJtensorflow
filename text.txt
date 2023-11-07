@@ -1,0 +1,98 @@
+Set-ExecutionPolicy Unrestricted -Scope Process
+& d:/workspace/TFODproject/tfod/Scripts/Activate.ps1
+
+python: 3.10.8 >> 3.9.13
+tensorflow: 2.11.0 >> 2.5.0
+number of GPU: 0
+protobul: 3.17.3
+keras: 2.10.0 >>
+tensorflow-model-build: 2.5.1
+numpy: 1.22.4 == 0xf >> 0x10 
+        1.21
+
+download: https://github.com/tensorflow/models
+python object_detection/builders/model_builder_tf2_test.py
+
+
+train....
+try... failed... wrong file path
+python generate_tfrecord.py -x tensorflow/workspace/training/images/train -l tensorflow/workspace/training/annotations/labelmap.pbtxt -o tensorflow/workspace/training/annotations/train.record
+
+try... successful
+python generate_tfrecord.py -x images/train -l annotations/labelmap.pbtxt -o annotations/train.record
+
+
+test....
+try....
+python generate_tfrecord.py -x images/test -l annotations/labelmap.pbtxt -o annotations/test.record
+
+
+
+path_of_train_folder:
+C:\Users\Jibreel\workspace\TensorFlowOBJ\tfod\tensorflow\workspace\training
+
+path_of_labelmap: 
+C:\Users\Jibreel\workspace\TensorFlowOBJ\tfod\tensorflow\workspace\training\annotation\labelmap.pbtxt
+
+path_of_output_tfrecord:
+C:\Users\Jibreel\workspace\TensorFlowOBJ\tfod\tensorflow\workspace\training\annotation\train.record 
+
+
+editing pipeline config
+num_classes: 14
+batch_batch: 1
+use_bfloat: false
+
+label_map_path: 
+C:/Users/Jibreel/workspace/TensorFlowOBJ/tfod/tensorflow/workspace/training/annotations/labelmap.pbtxt
+
+fine_tune_checkpoint:
+C:/Users/Jibreel/workspace/TensorFlowOBJ/tfod/tensorflow/workspace/training/pre-training-models/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8/checkpoint/ckpt-0
+
+input_path:(train)
+C:/Users/Jibreel/workspace/TensorFlowOBJ/tfod/tensorflow/workspace/training/annotations/train.record
+
+input_path:(test)
+
+
+start training:
+python model_main_tf2.py --model_dir=models/ssd_mobilenet_v2_fpnlite --pipeline_config_path=models/ssd_mobilenet_v2_fpnlite/pipeline.config
+
+model_dir=
+models/ssd_mobilenet_v2_fpnlite
+
+pipeline_config_path=
+models/ssd_mobilenet_v2_fpnlite/pipeline.config
+
+training steps 50000
+
+export frozzen graph: 
+1. get python file: export_tflite_graph_tf2.py
+location: C:\Users\Jibreel\workspace\TensorFlowOBJ\tfod\tensorflow\models\research\object_detection
+
+run export_tflite_graph_tf2.py
+python export_tflite_graph_tf2.py --pipeline_config_path models/ssd_mobilenet_v2_fpnlite/pipeline.config --trained_checkpoint_dir models/ssd_mobilenet_v2_fpnlite/ --output_directory models/ssd_mobilenet_v2_fpnlite/
+
+path_config:
+C:/Users/Jibreel/workspace/TensorFlowOBJ/tfod/tensorflow/workspace/training/models/ssd_mobilenet_v2_fpnlite/pipeline.config
+or 
+models/ssd_mobilenet_v2_fpnlite/pipeline.config
+
+path_checkpoint:
+models/ssd_mobilenet_v2_fpnlite
+
+path_export_frozen_graph:
+models/ssd_mobilenet_v2_fpnlite
+
+
+Process 2: converting frozzen graph to tensorflow lite
+
+tflite_convert --saved_model_dir=models/ssd_mobilenet_v2_fpnlite/saved_model --output_file=models/ssd_mobilenet_v2_fpnlite/model.tflite
+
+
+C:/Users/Jibreel/workspace/TensorFlowOBJ/tfod/tensorflow/workspace/training/models/ssd_mobilenet_v2_fpnlite/saved_model
+or
+models/ssd_mobilenet_v2_fpnlite/saved_model
+
+output_file :  output_path with model name 
+models/ssd_mobilenet_v2_fpnlite/model.tflife 
