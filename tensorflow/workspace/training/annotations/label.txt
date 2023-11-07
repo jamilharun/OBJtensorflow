@@ -1,0 +1,14 @@
+ballpen
+tumbler
+cane
+car
+dog
+gallon
+glasses
+laptop
+facemask
+remote
+slipper
+garbagebin
+watch
+hand
